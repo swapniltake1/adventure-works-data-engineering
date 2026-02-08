@@ -1,0 +1,22 @@
+{
+	"name": "csvdatafromgit",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Httplinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "swapniltake1/adventure-works-data-engineering/refs/heads/main/Data/AdventureWorks_Calendar.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
