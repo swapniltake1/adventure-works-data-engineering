@@ -1,0 +1,9 @@
+{
+	"name": "adf-aw-project-swap",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c020ad5a-19ac-4b90-b2db-3d6f85cd5e3f",
+		"tenantId": "9f7c7551-cd79-46f6-94de-7c383ad2887d"
+	}
+}
