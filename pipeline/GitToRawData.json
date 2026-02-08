@@ -86,7 +86,7 @@
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@item().p_file_name",
+											"value": "@item().p_sink_file",
 											"type": "Expression"
 										}
 									}
