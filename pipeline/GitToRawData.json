@@ -54,7 +54,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_raw",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					}
 				]
