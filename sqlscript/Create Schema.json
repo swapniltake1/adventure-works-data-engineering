@@ -2,7 +2,7 @@
 	"name": "Create Schema",
 	"properties": {
 		"content": {
-			"query": "-- File Name   : gold_views_adventureworks.sql\n-- Platform    : Databricks SQL\n-- Purpose     : Create GOLD views over SILVER Parquet data\n-- Architecture: Medallion (Silver → Gold)\n-- =========================================================\n\n-- Create GOLD schema if not exists\nCREATE SCHEMA IF NOT EXISTS gold;\n",
+			"query": "-- File Name   : gold_views_adventureworks.sql\n-- Platform    : Databricks SQL\n-- Purpose     : Create GOLD views over SILVER Parquet data\n-- Architecture: Medallion (Silver → Gold)\n-- =========================================================\n\n-- Create GOLD schema if not exists\nCREATE SCHEMA IF NOT EXISTS gold;\n--- ",
 			"metadata": {
 				"language": "sql"
 			},
