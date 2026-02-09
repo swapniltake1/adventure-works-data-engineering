@@ -1,0 +1,17 @@
+{
+	"name": "Create Views - Gold",
+	"properties": {
+		"content": {
+			"query": "CREATE OR ALTER VIEW gold.calendar\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Calendar/',\n    FORMAT = 'PARQUET'\n) AS CalendarView;\nGO\n\n/* ============================================================\n   Customers Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.customers\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Customers/',\n    FORMAT = 'PARQUET'\n) AS CustomersView;\nGO\n\n/* ============================================================\n   Product Categories Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.product_categories\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Product_Categories/',\n    FORMAT = 'PARQUET'\n) AS ProductCategoriesView;\nGO\n\n/* ============================================================\n   Product Subcategories Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.product_subcategories\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Product_Subcategories/',\n    FORMAT = 'PARQUET'\n) AS ProductSubcategoriesView;\nGO\n\n/* ============================================================\n   Products Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.products\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Products/',\n    FORMAT = 'PARQUET'\n) AS ProductsView;\nGO\n\n/* ============================================================\n   Returns Fact\n   ============================================================ */\nCREATE OR ALTER VIEW gold.returns\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Returns/',\n    FORMAT = 'PARQUET'\n) AS ReturnsView;\nGO\n\n/* ============================================================\n   Sales Fact (Merged Sales Data)\n   ============================================================ */\nCREATE OR ALTER VIEW gold.sales\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Sales/',\n    FORMAT = 'PARQUET'\n) AS SalesView;\nGO\n\n/* ============================================================\n   Territories Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.territories\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Territories/',\n    FORMAT = 'PARQUET'\n) AS TerritoriesView;\nGO\n\n/* ============================================================\n   Validation Queries (Optional – run manually)\n   ============================================================ */\n-- SELECT TOP 10 * FROM gold.calendar;\n-- SELECT COUNT(*) FROM gold.sales;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "Aw-Project",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
