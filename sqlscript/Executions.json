@@ -1,0 +1,17 @@
+{
+	"name": "Executions",
+	"properties": {
+		"content": {
+			"query": "",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": -1
+		},
+		"type": "SqlQuery"
+	}
+}
