@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "swap-aw-project"
+		},
+		"GitHub1_credential": {
+			"value": ""
+		},
+		"swap-aw-project-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:swap-aw-project.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"GitHub1_properties_typeProperties_username": {
+			"value": "swapniltake1"
+		},
+		"swap-aw-project-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://swapsynapsestorage.dfs.core.windows.net"
+		}
+	}
+}

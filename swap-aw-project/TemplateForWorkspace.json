@@ -1,0 +1,169 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "swap-aw-project"
+		},
+		"GitHub1_credential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'credential' of 'GitHub1'"
+		},
+		"swap-aw-project-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'swap-aw-project-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:swap-aw-project.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"GitHub1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "swapniltake1"
+		},
+		"swap-aw-project-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://swapsynapsestorage.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/GitHub1')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "GitHub",
+				"typeProperties": {
+					"username": "[parameters('GitHub1_properties_typeProperties_username')]",
+					"credential": {
+						"type": "SecureString",
+						"value": "[parameters('GitHub1_credential')]"
+					},
+					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIlNZTkFQU0VAQ0UzRDcxMTEtQzk3Ny00OUNELTlFMkUtRUE0QzcyNzBCNzIwXzYxMmYxNDlmLTJiMzktNGY4Yy05ZTdjLTlmZDk5ZDQzMGYxYSINCn0="
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/swap-aw-project-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('swap-aw-project-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/swap-aw-project-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('swap-aw-project-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Create Schema')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- File Name   : gold_views_adventureworks.sql\n-- Platform    : Databricks SQL\n-- Purpose     : Create GOLD views over SILVER Parquet data\n-- Architecture: Medallion (Silver → Gold)\n-- =========================================================\n\n-- Create GOLD schema if not exists\nCREATE SCHEMA IF NOT EXISTS gold;\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Aw-Project",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Create Views - Gold')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE OR ALTER VIEW gold.calendar\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Calendar/',\n    FORMAT = 'PARQUET'\n) AS CalendarView;\nGO\n\n/* ============================================================\n   Customers Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.customers\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Customers/',\n    FORMAT = 'PARQUET'\n) AS CustomersView;\nGO\n\n/* ============================================================\n   Product Categories Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.product_categories\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Product_Categories/',\n    FORMAT = 'PARQUET'\n) AS ProductCategoriesView;\nGO\n\n/* ============================================================\n   Product Subcategories Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.product_subcategories\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Product_Subcategories/',\n    FORMAT = 'PARQUET'\n) AS ProductSubcategoriesView;\nGO\n\n/* ============================================================\n   Products Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.products\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Products/',\n    FORMAT = 'PARQUET'\n) AS ProductsView;\nGO\n\n/* ============================================================\n   Returns Fact\n   ============================================================ */\nCREATE OR ALTER VIEW gold.returns\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Returns/',\n    FORMAT = 'PARQUET'\n) AS ReturnsView;\nGO\n\n/* ============================================================\n   Sales Fact (Merged Sales Data)\n   ============================================================ */\nCREATE OR ALTER VIEW gold.sales\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Sales/',\n    FORMAT = 'PARQUET'\n) AS SalesView;\nGO\n\n/* ============================================================\n   Territories Dimension\n   ============================================================ */\nCREATE OR ALTER VIEW gold.territories\nAS\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://swap01storageaccount.blob.core.windows.net/silver/AdventureWorks_Territories/',\n    FORMAT = 'PARQUET'\n) AS TerritoriesView;\nGO\n\n/* ============================================================\n   Validation Queries (Optional – run manually)\n   ============================================================ */\n-- SELECT TOP 10 * FROM gold.calendar;\n-- SELECT COUNT(*) FROM gold.sales;",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Aw-Project",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		}
+	]
+}
