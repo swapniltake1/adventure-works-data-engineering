@@ -1,0 +1,17 @@
+{
+	"name": "Create External Table Config",
+	"properties": {
+		"content": {
+			"query": "CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Pass@123';\n\ncreate DATABASE scoped CREDENTIAL cred_swap \nWITH IDENTITY = 'Managed Identity'\n\nCREATE EXTERNAL DATA SOURCE SilverDataSource\nWITH (\n    LOCATION = 'https://swap01storageaccount.blob.core.windows.net/silver',\n    CREDENTIAL = cred_swap\n)\n\nCREATE EXTERNAL DATA SOURCE GoldDataSource\nWITH (\n    LOCATION = 'https://swap01storageaccount.blob.core.windows.net/gold',\n    CREDENTIAL = cred_swap\n)\n\nCREATE EXTERNAL FILE FORMAT ParquetFileFormat\nWITH (\n    FORMAT_TYPE = PARQUET,\n    DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'\n)\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "Aw-Project",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

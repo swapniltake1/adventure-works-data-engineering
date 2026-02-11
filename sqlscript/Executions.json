@@ -2,12 +2,12 @@
 	"name": "Executions",
 	"properties": {
 		"content": {
-			"query": "",
+			"query": " Select * from gold.customers",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "Aw-Project",
 				"poolName": "Built-in"
 			},
 			"resultLimit": -1
