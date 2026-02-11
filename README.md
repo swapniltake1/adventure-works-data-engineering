@@ -53,14 +53,6 @@ Build a production-style modern data platform that:
    - Connect Power BI to Synapse (or curated data endpoint).
    - Build reports and dashboards from gold views.
 
-## ✅ Bug Review / Quality Checks
-I reviewed the JSON artifacts in this repository and verified that all checked files are valid JSON (no syntax-level deployment blockers found).
-
-### Validation command
-```bash
-find . -name '*.json' -not -path './.git/*' -print0 | while IFS= read -r -d '' f; do jq empty "$f" || echo "INVALID: $f"; done
-```
-
 ## 🛠️ How to Use This Repository
 1. Import these artifacts into your Azure Data Factory/Synapse workspace.
 2. Update linked service credentials and storage account references.
@@ -69,11 +61,3 @@ find . -name '*.json' -not -path './.git/*' -print0 | while IFS= read -r -d '' f
 5. Run Databricks notebooks for silver/gold transformations.
 6. Execute SQL scripts in `sqlscript/` to create schema/tables/views.
 7. Connect Power BI and build visual reports.
-
-## 📌 Notes
-- This repository mostly contains orchestration and SQL artifact definitions.
-- Databricks notebooks and Power BI `.pbix` files are not included here; add them in dedicated folders if needed.
-- If you want, I can also generate:
-  - a detailed architecture diagram section,
-  - a deployment checklist,
-  - and a troubleshooting guide for common pipeline failures.
